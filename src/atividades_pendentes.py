@@ -1,9 +1,10 @@
-from botcity.web import WebBot, By
 from openpyxl import Workbook
+from botcity.web import WebBot, By
 
 class AtividadesPendentes:
     def __init__(self, web_bot: WebBot):
         self.web_bot = web_bot
+        self.web_bot.start_browser()
 
 
     def main(self):
