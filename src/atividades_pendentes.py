@@ -1,13 +1,16 @@
 from openpyxl import Workbook
 from botcity.web import WebBot, By
 
+from src.utils import Utils
+
 class AtividadesPendentes:
-    def __init__(self, web_bot: WebBot):
+    def __init__(self, web_bot: WebBot, utils: Utils):
         self.web_bot = web_bot
-        self.web_bot.start_browser()
+        self.utils = utils
 
 
     def main(self):
+        self.web_bot.start_browser()
         self.web_bot.maximize_window()
         self.web_bot.browse("https://virtual.unifebe.edu.br/avea/login/index.php")
         self.web_bot.wait(8000)
@@ -50,8 +53,15 @@ class AtividadesPendentes:
             status = atividade.find_element(By.CLASS_NAME, 'snap-completion-meta').text
             link = atividade.find_element(By.TAG_NAME, 'a').get_attribute('href')
 
+            if titulo.find("NCDISINST"):
+                titulo = titulo.split("NCDISINST")[0],
+            else:
+                titulo = titulo.split(" está marcado(a) para esta data")[0]
+
+            titulo = self.utils.limpa_caracteres_especiais(titulo[0])
+
             atividades_coletadas.append({
-            "Título": titulo.split(" está marcado(a) para esta data")[0],
+            "Título": titulo,
             "Data de Entrega": data_entrega,
             "Status": status,
             "Link": link

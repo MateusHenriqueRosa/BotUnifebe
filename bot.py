@@ -9,6 +9,7 @@ class BotUnifebe:
         menu_principal = MenuPrincipal(
             self.inicializador.tkinter,
             self.inicializador.atividades_pendentes,
+            self.inicializador.quantidade_faltas,
             self.inicializador.utils,
         )
         

@@ -3,6 +3,8 @@ import tkinter as tk
 from botcity.web import WebBot, Browser
 
 from src.utils import Utils
+from src.baixa_boletim import BaixaBoletim
+from src.quantidade_faltas import QuantidadeDeFaltas
 from src.atividades_pendentes import AtividadesPendentes
 
 
@@ -11,7 +13,9 @@ class InicializaObjetos:
         self.web_bot = self.__inicializa_web_bot()
         self.tkinter = self.__inicializa_tkinter()
         self.utils = Utils()
-        self.atividades_pendentes = AtividadesPendentes(self.web_bot)
+        self.atividades_pendentes = AtividadesPendentes(self.web_bot, self.utils)
+        self.baixa_boletim = BaixaBoletim(self.web_bot)
+        self.quantidade_faltas = QuantidadeDeFaltas(self.utils, self.baixa_boletim)
 
 
     def __inicializa_web_bot(self):
@@ -19,7 +23,6 @@ class InicializaObjetos:
         self.web_bot.headless = False
         self.web_bot.browser = Browser.EDGE
         self.web_bot.driver_path = r"drivers\msedgedriver.exe"
-        # self.web_bot.start_browser()
         return self.web_bot
     
 
