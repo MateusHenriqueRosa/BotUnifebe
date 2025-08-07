@@ -1,6 +1,7 @@
 import tkinter as tk
 
 from botcity.web import WebBot, Browser
+from botcity.core import DesktopBot
 
 from src.utils import Utils
 from src.baixa_boletim import BaixaBoletim
@@ -13,8 +14,9 @@ class InicializaObjetos:
         self.web_bot = self.__inicializa_web_bot()
         self.tkinter = self.__inicializa_tkinter()
         self.utils = Utils()
+        self.desktop_bot = DesktopBot()
         self.atividades_pendentes = AtividadesPendentes(self.web_bot, self.utils)
-        self.baixa_boletim = BaixaBoletim(self.web_bot)
+        self.baixa_boletim = BaixaBoletim(self.web_bot, self.utils, self.desktop_bot)
         self.quantidade_faltas = QuantidadeDeFaltas(self.utils, self.baixa_boletim)
 
 
