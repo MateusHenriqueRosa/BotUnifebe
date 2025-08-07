@@ -67,6 +67,7 @@ class BaixaBoletim:
             self.desktop_bot.type_keys(['ctrl','s'])
 
         self.web_bot.wait(5000)
+        self.desktop_bot.type_keys(['ctrl','w'])
         self.web_bot.stop_browser()
 
         return True
