@@ -1,11 +1,16 @@
 import os
 
 from botcity.web import WebBot, By
+from botcity.core import DesktopBot
+
+from src.utils import Utils
 
 
 class BaixaBoletim:
-    def __init__(self, web_bot: WebBot):
+    def __init__(self, web_bot: WebBot, utils: Utils, desktop_bot: DesktopBot):
         self.web_bot = web_bot
+        self.utils = utils
+        self.desktop_bot = desktop_bot
 
     def main(self):
         self.web_bot.start_browser()
@@ -51,20 +56,15 @@ class BaixaBoletim:
         )
         self.web_bot.wait(2000)
 
-        iframe_boletim = self.web_bot.find_element(
-            selector='//*[@id="relatorio"]', by=By.XPATH
-        )
-        iframe_2 = self.web_bot.find_element(
-            selector='//*[@id="iframeIntegracao"]', by=By.XPATH
-        )
+        self.web_bot.hold_shift()
+        self.web_bot.tab()
+        self.web_bot.tab()
+        self.web_bot.release_shift()
+        self.web_bot.enter()
 
-        self.web_bot.enter_iframe(iframe_2)
-        self.web_bot.enter_iframe(iframe_boletim)
-
-        self.web_bot.execute_javascript("abreJanelaPoupop()")
-        
-        self.web_bot.leave_iframe()
-        self.web_bot.leave_iframe()
+        self.web_bot.wait(2000)
+        if not self.utils.busca_arquivos_projeto(".pdf"):
+            self.desktop_bot.type_keys(['ctrl','s'])
 
         self.web_bot.wait(5000)
         self.web_bot.stop_browser()
