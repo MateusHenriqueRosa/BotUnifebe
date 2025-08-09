@@ -15,9 +15,15 @@ class MenuPrincipal:
         self.atividades_pendentes = atividades_pendentes
         self.utils = utils
         self.root = tkinter
+        
         self.root.title("Sistema de Automação")
-        self.root.geometry("800x600")
-        self.root.configure(bg='#f0f0f0')
+        largura_janela = 800
+        altura_janela = 600
+        largura_tela = self.root.winfo_screenwidth()
+        altura_tela = self.root.winfo_screenheight()
+        pos_x = (largura_tela // 2) - (largura_janela // 2)
+        pos_y = (altura_tela // 2) - (altura_janela // 2)
+        self.root.geometry(f'{largura_janela}x{altura_janela}+{pos_x}+{pos_y}')
 
         # Variáveis para armazenar dados de cada automação
         self.dataframe_atividades_pendentes = None
@@ -142,22 +148,35 @@ class MenuPrincipal:
                 os.remove(os.path.join(self.utils.caminho_projeto, arquivo))
 
         elif tipo == "Notas Faltantes":
-            self.quantidade_faltas.main()
-            excel = self.utils.busca_arquivos_projeto(".xlsx")
-            self.dataframe_notas_faltantes = pd.read_excel(excel[0])
-            for arquivo in self.utils.busca_arquivos_projeto(".xlsx"):
-                os.remove(os.path.join(self.utils.caminho_projeto, arquivo))
-
-        elif tipo == "Quantidade de Faltas":
             # Simular coleta de dados para Quantidade de Faltas
             # Substitua esta parte pela lógica real de coleta
-            self.dataframe_quantidade_faltas = pd.DataFrame({
+            self.dataframe_notas_faltantes = pd.DataFrame({
                 'Aluno': ['Ana Paula', 'Carlos Lima', 'Fernanda Rocha'],
                 'Disciplina': ['Física', 'Química', 'Biologia'],
                 'Total_Aulas': [40, 36, 32],
                 'Faltas': [8, 12, 5],
                 'Percentual_Faltas': ['20%', '33%', '16%']
             })
+
+        elif tipo == "Quantidade de Faltas":
+            pdfs = self.utils.busca_arquivos_projeto(".pdf")
+            if not pdfs:
+                self.quantidade_faltas.main()
+            else:
+                resposta = messagebox.askquestion(
+                    "Boletim desatualizado",
+                    "Deseja atualizar Boletim? (Caso sim roda a automação)"
+                )
+                if resposta == "yes":
+                    for boletim in pdfs:
+                        os.remove(os.path.join(self.utils.caminho_projeto, boletim))
+                    self.quantidade_faltas.main()
+
+            excel = self.utils.busca_arquivos_projeto(".xlsx")
+            if excel:
+                self.dataframe_quantidade_faltas = pd.read_excel(excel[0])
+                for arquivo in self.utils.busca_arquivos_projeto(".xlsx"):
+                    os.remove(os.path.join(self.utils.caminho_projeto, arquivo))
 
         messagebox.showinfo(
             "Automação Concluída",
