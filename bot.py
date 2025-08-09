@@ -1,7 +1,6 @@
-from src.tela_login import TelaLogin
-
-from src.inicializador import InicializaObjetos
 from src.menu import MenuPrincipal
+from src.tela_login import TelaLogin
+from src.inicializador import InicializaObjetos
 
 
 class BotUnifebe:
