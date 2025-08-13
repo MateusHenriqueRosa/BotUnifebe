@@ -1,5 +1,3 @@
-import os
-
 from botcity.web import WebBot, By
 from botcity.core import DesktopBot
 
@@ -12,7 +10,7 @@ class BaixaBoletim:
         self.utils = utils
         self.desktop_bot = desktop_bot
 
-    def main(self):
+    def baixa_boletim(self):
         self.web_bot.start_browser()
         self.web_bot.maximize_window()
         self.web_bot.browse("https://mentorweb.unifebe.edu.br/unifebeSecurityG5/")
