@@ -143,9 +143,9 @@ class MenuPrincipal:
         if tipo == "Atividades Pendentes":
             self.atividades_pendentes.main()
             excel = self.utils.busca_arquivos_projeto(".xlsx")
-            self.dataframe_atividades_pendentes = pd.read_excel(excel[0])
-            for arquivo in self.utils.busca_arquivos_projeto(".xlsx"):
-                os.remove(os.path.join(self.utils.caminho_projeto, arquivo))
+            if excel:
+                self.dataframe_atividades_pendentes = pd.read_excel(excel)
+                os.remove(os.path.join(self.utils.caminho_projeto, excel))
 
         elif tipo == "Notas Faltantes":
             # Simular coleta de dados para Quantidade de Faltas
@@ -159,8 +159,8 @@ class MenuPrincipal:
             })
 
         elif tipo == "Quantidade de Faltas":
-            pdfs = self.utils.busca_arquivos_projeto(".pdf")
-            if not pdfs:
+            pdf = self.utils.busca_arquivos_projeto(".pdf")
+            if not pdf:
                 self.quantidade_faltas.main()
             else:
                 resposta = messagebox.askquestion(
@@ -168,20 +168,16 @@ class MenuPrincipal:
                     "Deseja atualizar Boletim? (Caso sim roda a automação)"
                 )
                 if resposta == "yes":
-                    for boletim in pdfs:
-                        os.remove(os.path.join(self.utils.caminho_projeto, boletim))
+                    if pdf:
+                        os.remove(os.path.join(self.utils.caminho_projeto, pdf))
                     self.quantidade_faltas.main()
+                else:
+                    self.quantidade_faltas.extrair_tabelas_pdf(os.path.join(self.utils.caminho_projeto, pdf))
 
             excel = self.utils.busca_arquivos_projeto(".xlsx")
             if excel:
-                self.dataframe_quantidade_faltas = pd.read_excel(excel[0])
-                for arquivo in self.utils.busca_arquivos_projeto(".xlsx"):
-                    os.remove(os.path.join(self.utils.caminho_projeto, arquivo))
-
-        messagebox.showinfo(
-            "Automação Concluída",
-            f"Automação de {tipo} executada com sucesso!\n"
-        )
+                self.dataframe_quantidade_faltas = pd.read_excel(excel)
+                os.remove(os.path.join(self.utils.caminho_projeto, excel))
 
         self.__mostrar_consulta_especifica(tipo)
 
@@ -360,14 +356,14 @@ class MenuPrincipal:
         btn_resolver_ia.pack(side='right', padx=(5, 0))
 
     def __get_dataframe_por_tipo(self, tipo):
-        """Retorna o dataframe correto baseado no tipo de automação"""
-        if tipo == "Atividades Pendentes":
+        tipo = tipo.strip().lower()
+        if tipo == "atividades pendentes":
             return self.dataframe_atividades_pendentes
-        elif tipo == "Notas Faltantes":
+        elif tipo == "notas faltantes":
             return self.dataframe_notas_faltantes
-        elif tipo == "Quantidade de Faltas":
+        elif tipo == "quantidade de faltas":
             return self.dataframe_quantidade_faltas
-        return None
+
 
     def exportar_xlsx(self, tipo):
         dataframe_atual = self.__get_dataframe_por_tipo(tipo)
@@ -379,11 +375,11 @@ class MenuPrincipal:
 
         try:
             filename = filedialog.asksaveasfilename(
-                defaultextension=".xlsx",
-                filetypes=[("Excel files", "*.xlsx"), ("All files", "*.*")],
-                title=f"Salvar {tipo} como Excel",
-                initialname=f"{tipo.replace(' ', '_').lower()}.xlsx"
-            )
+            defaultextension=".xlsx",
+            filetypes=[("Excel files", "*.xlsx"), ("All files", "*.*")],
+            title=f"Salvar {tipo} como Excel",
+            initialfile=f"{tipo.replace(' ', '_').lower()}.xlsx"
+        )
 
             if filename:
                 dataframe_atual.to_excel(filename, index=False)
@@ -406,7 +402,7 @@ class MenuPrincipal:
                 defaultextension=".csv",
                 filetypes=[("CSV files", "*.csv"), ("All files", "*.*")],
                 title=f"Salvar {tipo} como CSV",
-                initialname=f"{tipo.replace(' ', '_').lower()}.csv"
+                initialfile=f"{tipo.replace(' ', '_').lower()}.csv"
             )
 
             if filename:
