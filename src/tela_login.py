@@ -2,9 +2,8 @@ from tkinter import Tk, Frame, Label, Entry, Button, messagebox
 
 
 class TelaLogin:
-    def __init__(self, root: Tk, callback_sucesso):
+    def __init__(self, root: Tk):
         self.root = root
-        self.callback_sucesso = callback_sucesso
         self.root.title("Login - Automação Unifebe")
 
         largura_janela = 400
@@ -20,9 +19,9 @@ class TelaLogin:
         self.login_frame = Frame(self.root, bg="#f0f0f0", padx=40, pady=20)
         self.login_frame.pack(expand=True)
 
-        self.__criar_widgets()
+    def criar_widgets(self, sucesso_login):
+        self.sucesso_login = sucesso_login
 
-    def __criar_widgets(self):
         label_titulo = Label(
             self.login_frame,
             text="Acessar o Sistema",
@@ -66,9 +65,8 @@ class TelaLogin:
 
         # substituir essa parte para uma base de dados, provavelmente sqlite
         if usuario == "1" and senha == "1":
-            messagebox.showinfo("Sucesso", "Login realizado com sucesso!")
             self.__destruir_tela_login()
-            self.callback_sucesso()
+            self.sucesso_login()
         else:
             messagebox.showerror("Erro de Login", "Usuário ou senha inválidos.")
 
