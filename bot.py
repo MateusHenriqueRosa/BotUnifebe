@@ -1,3 +1,6 @@
+import logging
+import sys
+
 from src.menu import MenuPrincipal
 from src.tela_login import TelaLogin
 from src.inicializador import InicializaObjetos
@@ -7,14 +10,21 @@ class BotUnifebe:
     def __init__(self):
         self.inicializador = InicializaObjetos()
 
-        self.tela_login = TelaLogin(
-            self.inicializador.tkinter,
-            self.iniciar_menu_principal
-        )
-        self.inicializador.tkinter.mainloop()
+        logging.info("Iniciando BotUnifebe")
 
-    def iniciar_menu_principal(self):
+        try:
+            tela_login = TelaLogin(self.inicializador.tkinter)
+            tela_login.criar_widgets(self.abrir_menu_principal)
+            self.inicializador.tkinter.mainloop()
 
+            logging.info("BotUnifebe finalizado")
+            sys.exit(0)
+
+        except Exception as erro:
+            logging.error(f"Erro crítico na execução. ERRO: {erro}")
+            sys.exit(0)
+
+    def abrir_menu_principal(self):
         menu_principal = MenuPrincipal(
             self.inicializador.tkinter,
             self.inicializador.atividades_pendentes,
