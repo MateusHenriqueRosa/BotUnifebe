@@ -6,6 +6,7 @@ from botcity.core import DesktopBot
 
 from src.atividades_pendentes import AtividadesPendentes
 from src.quantidade_faltas import QuantidadeDeFaltas
+from src.notas_boletim import NotasBoletim
 from src.utils import Utils
 
 
@@ -17,7 +18,10 @@ class InicializaObjetos:
         self.utils = Utils()
         self.desktop_bot = DesktopBot()
         self.atividades_pendentes = AtividadesPendentes(self.web_bot, self.utils)
-        self.quantidade_faltas = QuantidadeDeFaltas(self.web_bot, self.utils, self.desktop_bot)
+        self.quantidade_faltas = QuantidadeDeFaltas(
+            self.web_bot, self.utils, self.desktop_bot
+        )
+        self.notas_boletim = NotasBoletim(self.web_bot, self.utils, self.desktop_bot)
 
     def __inicializa_web_bot(self):
         self.web_bot = WebBot()
