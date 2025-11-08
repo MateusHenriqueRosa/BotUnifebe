@@ -5,13 +5,15 @@ from tkinter import Button, Frame, Label, messagebox, filedialog, ttk
 import pandas as pd
 
 from .utils import Utils
+from .notas_boletim import NotasBoletim
 from .quantidade_faltas import QuantidadeDeFaltas
 from .atividades_pendentes import AtividadesPendentes
 
 
 class MenuPrincipal:
-    def __init__(self, tkinter: Tk, atividades_pendentes: AtividadesPendentes, quantidade_faltas: QuantidadeDeFaltas, utils: Utils):
+    def __init__(self, tkinter: Tk, atividades_pendentes: AtividadesPendentes, quantidade_faltas: QuantidadeDeFaltas, notas_boletim: NotasBoletim, utils: Utils):
         self.quantidade_faltas = quantidade_faltas
+        self.notas_boletim = notas_boletim
         self.atividades_pendentes = atividades_pendentes
         self.utils = utils
         self.root = tkinter
@@ -27,7 +29,7 @@ class MenuPrincipal:
 
         # Variáveis para armazenar dados de cada automação
         self.dataframe_atividades_pendentes = None
-        self.dataframe_notas_faltantes = None
+        self.dataframe_notas_boletim = None
         self.dataframe_quantidade_faltas = None
         self.tipo_automacao_atual = None
 
@@ -148,15 +150,25 @@ class MenuPrincipal:
                 os.remove(os.path.join(self.utils.caminho_projeto, excel))
 
         elif tipo == "Notas Faltantes":
-            # Simular coleta de dados para Quantidade de Faltas
-            # Substitua esta parte pela lógica real de coleta
-            self.dataframe_notas_faltantes = pd.DataFrame({
-                'Aluno': ['Ana Paula', 'Carlos Lima', 'Fernanda Rocha'],
-                'Disciplina': ['Física', 'Química', 'Biologia'],
-                'Total_Aulas': [40, 36, 32],
-                'Faltas': [8, 12, 5],
-                'Percentual_Faltas': ['20%', '33%', '16%']
-            })
+            pdf = self.utils.busca_arquivos_projeto(".pdf")
+            if not pdf:
+                self.notas_boletim.main()
+            else:
+                resposta = messagebox.askquestion(
+                    "Boletim desatualizado",
+                    "Deseja atualizar Boletim? (Caso sim roda a automação)"
+                )
+                if resposta == "yes":
+                    if pdf:
+                        os.remove(os.path.join(self.utils.caminho_projeto, pdf))
+                    self.notas_boletim.main()
+                else:
+                    self.notas_boletim.extrair_tabelas_pdf(os.path.join(self.utils.caminho_projeto, pdf))
+
+            excel = self.utils.busca_arquivos_projeto(".xlsx")
+            if excel:
+                self.dataframe_notas_boletim = pd.read_excel(excel)
+                os.remove(os.path.join(self.utils.caminho_projeto, excel))
 
         elif tipo == "Quantidade de Faltas":
             pdf = self.utils.busca_arquivos_projeto(".pdf")
@@ -360,7 +372,7 @@ class MenuPrincipal:
         if tipo == "atividades pendentes":
             return self.dataframe_atividades_pendentes
         elif tipo == "notas faltantes":
-            return self.dataframe_notas_faltantes
+            return self.dataframe_notas_boletim
         elif tipo == "quantidade de faltas":
             return self.dataframe_quantidade_faltas
 
