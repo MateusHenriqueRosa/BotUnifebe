@@ -29,6 +29,7 @@ class BotUnifebe:
             self.inicializador.tkinter,
             self.inicializador.atividades_pendentes,
             self.inicializador.quantidade_faltas,
+            self.inicializador.notas_boletim,
             self.inicializador.utils,
         )
 
