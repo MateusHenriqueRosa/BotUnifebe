@@ -1,7 +1,12 @@
 import os
 
+from decouple import config
+
 
 class Utils:
+    USUARIO_UNIFEBE = config("USUARIO_UNIFEBE")
+    SENHA_UNIFEBE = config("SENHA_UNIFEBE")
+
     def __init__(self):
         self.caminho_projeto = os.path.abspath(".")
 

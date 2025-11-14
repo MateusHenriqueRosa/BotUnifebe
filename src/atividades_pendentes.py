@@ -3,11 +3,11 @@ from botcity.web import WebBot, By
 
 from src.utils import Utils
 
+
 class AtividadesPendentes:
     def __init__(self, web_bot: WebBot, utils: Utils):
         self.web_bot = web_bot
         self.utils = utils
-
 
     def main(self):
         self.web_bot.start_browser()
@@ -16,9 +16,9 @@ class AtividadesPendentes:
         self.web_bot.wait(8000)
 
         login = self.web_bot.find_element(selector='//*[@id="username"]', by=By.XPATH)
-        login.send_keys("")
+        login.send_keys(self.utils.USUARIO_UNIFEBE)
         senha = self.web_bot.find_element(selector='//*[@id="password"]', by=By.XPATH)
-        senha.send_keys("")
+        senha.send_keys(self.utils.SENHA_UNIFEBE)
 
         self.web_bot.wait(1000)
 
@@ -42,30 +42,36 @@ class AtividadesPendentes:
 
         atividades = self.web_bot.find_elements(
             selector='//*[@id="snap-personal-menu-feed-deadlines"]/div[contains(@class, "feeditem")]',
-            by=By.XPATH
+            by=By.XPATH,
         )
+
+        if not atividades:
+            self.web_bot.stop_browser()
+            return
 
         atividades_coletadas = []
 
         for i, atividade in enumerate(atividades):
-            titulo = atividade.find_element(By.TAG_NAME, 'h3').text
-            data_entrega = atividade.find_element(By.TAG_NAME, 'time').text
-            status = atividade.find_element(By.CLASS_NAME, 'snap-completion-meta').text
-            link = atividade.find_element(By.TAG_NAME, 'a').get_attribute('href')
+            titulo = atividade.find_element(By.TAG_NAME, "h3").text
+            data_entrega = atividade.find_element(By.TAG_NAME, "time").text
+            status = atividade.find_element(By.CLASS_NAME, "snap-completion-meta").text
+            link = atividade.find_element(By.TAG_NAME, "a").get_attribute("href")
 
             if titulo.find("NCDISINST"):
-                titulo = titulo.split("NCDISINST")[0],
+                titulo = (titulo.split("NCDISINST")[0],)
             else:
                 titulo = titulo.split(" está marcado(a) para esta data")[0]
 
             titulo = self.utils.limpa_caracteres_especiais(titulo[0])
 
-            atividades_coletadas.append({
-            "Título": titulo,
-            "Data de Entrega": data_entrega,
-            "Status": status,
-            "Link": link
-            })
+            atividades_coletadas.append(
+                {
+                    "Título": titulo,
+                    "Data de Entrega": data_entrega,
+                    "Status": status,
+                    "Link": link,
+                }
+            )
 
         self.__salvar_atividades_em_excel(atividades_coletadas)
         self.web_bot.wait(5000)
@@ -79,11 +85,13 @@ class AtividadesPendentes:
         planilha.append(["Título", "Data de Entrega", "Status", "Link"])
 
         for atividade in atividades_coletadas:
-            planilha.append([
-                atividade["Título"],
-                atividade["Data de Entrega"],
-                atividade["Status"],
-                atividade["Link"]
-            ])
+            planilha.append(
+                [
+                    atividade["Título"],
+                    atividade["Data de Entrega"],
+                    atividade["Status"],
+                    atividade["Link"],
+                ]
+            )
 
         workbook.save("atividades.xlsx")

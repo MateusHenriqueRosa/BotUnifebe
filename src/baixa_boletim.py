@@ -17,9 +17,9 @@ class BaixaBoletim:
         self.web_bot.wait(8000)
 
         login = self.web_bot.find_element(selector='//*[@id="j_username"]', by=By.XPATH)
-        login.send_keys("")
+        login.send_keys(self.utils.USUARIO_UNIFEBE)
         senha = self.web_bot.find_element(selector='//*[@id="senha"]', by=By.XPATH)
-        senha.send_keys("")
+        senha.send_keys(self.utils.SENHA_UNIFEBE)
 
         self.web_bot.wait(1000)
 
@@ -62,10 +62,10 @@ class BaixaBoletim:
 
         self.web_bot.wait(2000)
         if not self.utils.busca_arquivos_projeto(".pdf"):
-            self.desktop_bot.type_keys(['ctrl','s'])
+            self.desktop_bot.type_keys(["ctrl", "s"])
 
         self.web_bot.wait(5000)
-        self.desktop_bot.type_keys(['ctrl','w'])
+        self.desktop_bot.type_keys(["ctrl", "w"])
         self.web_bot.stop_browser()
 
         return True
