@@ -49,7 +49,7 @@ class NotasBoletim(BaixaBoletim):
                 if texto[4].__contains__(" "):
                     notas_a3 = texto[4].split(" ")[0]
 
-                notas_total = str(
+                nota_total = str(
                     float(notas_a1.replace(",", "."))
                     + float(notas_a2.replace(",", "."))
                     + float(notas_a3.replace(",", "."))
@@ -61,9 +61,14 @@ class NotasBoletim(BaixaBoletim):
                         "Nota A1": notas_a1,
                         "Nota A2": notas_a2,
                         "Nota A3": notas_a3,
-                        "Notas Totais": notas_total,
+                        "Nota Total": nota_total,
+                        "Nota Faltante": (
+                            str(round(18.0 - float(nota_total), 2))
+                            if float(nota_total) < 18.0
+                            else "--"
+                        ),
                         "Aprovação": (
-                            "Aprovado" if float(notas_total) >= 18.0 else "Reprovado"
+                            "Aprovado" if float(nota_total) >= 18.0 else "Reprovado"
                         ),
                     }
                 )
@@ -76,7 +81,15 @@ class NotasBoletim(BaixaBoletim):
         planilha.title = "NotasBoletim"
 
         planilha.append(
-            ["Matéria", "Notas A1", "Notas A2", "Notas A3", "Notas Totais", "Aprovação"]
+            [
+                "Matéria",
+                "Notas A1",
+                "Notas A2",
+                "Notas A3",
+                "Nota Total",
+                "Nota Faltante",
+                "Aprovação",
+            ]
         )
 
         for linha in notas_coletadas:
@@ -86,7 +99,8 @@ class NotasBoletim(BaixaBoletim):
                     linha["Nota A1"],
                     linha["Nota A2"],
                     linha["Nota A3"],
-                    linha["Notas Totais"],
+                    linha["Nota Total"],
+                    linha["Nota Faltante"],
                     linha["Aprovação"],
                 ]
             )
