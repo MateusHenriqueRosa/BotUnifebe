@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS usuarios (
+    id SERIAL PRIMARY KEY,
+    usuario VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(255),
+    senha_hash VARCHAR(255) NOT NULL,
+    criado_em TIMESTAMP WITH TIME ZONE DEFAULT now()
+);

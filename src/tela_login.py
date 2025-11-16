@@ -1,5 +1,7 @@
+# src/tela_login.py
 from tkinter import Tk, Frame, Label, Entry, Button, messagebox
-
+from src.usuario import validar_login
+from src.tela_cadastro import TelaCadastro
 
 class TelaLogin:
     def __init__(self, root: Tk):
@@ -7,7 +9,7 @@ class TelaLogin:
         self.root.title("Login - Automação Unifebe")
 
         largura_janela = 400
-        altura_janela = 300
+        altura_janela = 320
         largura_tela = self.root.winfo_screenwidth()
         altura_tela = self.root.winfo_screenheight()
         pos_x = (largura_tela // 2) - (largura_janela // 2)
@@ -47,24 +49,47 @@ class TelaLogin:
         )
         self.entry_senha.pack(pady=(5, 20))
 
+        btn_frame = Frame(self.login_frame, bg="#f0f0f0")
+        btn_frame.pack()
+
         btn_entrar = Button(
-            self.login_frame,
+            btn_frame,
             text="Entrar",
             font=("Arial", 14, "bold"),
             bg="#4CAF50",
             fg="white",
             cursor="hand2",
-            width=15,
+            width=12,
             command=self.__verificar_login,
         )
-        btn_entrar.pack()
+        btn_entrar.grid(row=0, column=0, padx=(0,8))
+
+        btn_cadastrar = Button(
+            btn_frame,
+            text="Cadastrar",
+            font=("Arial", 12),
+            bg="#2196F3",
+            fg="white",
+            cursor="hand2",
+            width=10,
+            command=self.__abrir_tela_cadastro,
+        )
+        btn_cadastrar.grid(row=0, column=1)
+
+    def __abrir_tela_cadastro(self):
+        TelaCadastro(self.root)
 
     def __verificar_login(self):
         usuario = self.entry_usuario.get()
         senha = self.entry_senha.get()
 
-        # substituir essa parte para uma base de dados, provavelmente sqlite
-        if usuario == "1" and senha == "1":
+        try:
+            valido = validar_login(usuario, senha)
+        except Exception as e:
+            messagebox.showerror("Erro", f"Erro ao validar login:\n{e}")
+            return
+
+        if valido:
             self.__destruir_tela_login()
             self.sucesso_login()
         else:
