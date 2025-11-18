@@ -2,11 +2,12 @@ from decouple import config
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-POSTGRES_HOST = config("POSTGRES_HOST", default="localhost")
-POSTGRES_PORT = config("POSTGRES_PORT", default=5432, cast=int)
-POSTGRES_DB = config("POSTGRES_DB", default="postgres")
-POSTGRES_USER = config("POSTGRES_USER", default="postgres")
-POSTGRES_PASSWORD = config("POSTGRES_PASSWORD", default="")
+POSTGRES_HOST = config("POSTGRES_HOST")
+POSTGRES_PORT = config("POSTGRES_PORT")
+POSTGRES_DB = config("POSTGRES_DB")
+POSTGRES_USER = config("POSTGRES_USER")
+POSTGRES_PASSWORD = config("POSTGRES_PASSWORD")
+
 
 def get_connection():
     conn = psycopg2.connect(
@@ -17,6 +18,7 @@ def get_connection():
         password=POSTGRES_PASSWORD,
     )
     return conn
+
 
 def get_cursor_dict(conn):
     return conn.cursor(cursor_factory=RealDictCursor)
