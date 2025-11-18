@@ -3,13 +3,14 @@ from tkinter import Toplevel, Frame, Label, Entry, Button, messagebox
 from src.usuario import criar_usuario, buscar_usuario_por_username
 import re
 
+
 class TelaCadastro:
     def __init__(self, root):
         self.root = Toplevel(root)
         self.root.title("Cadastro - Automação Unifebe")
 
-        largura_janela = 420
-        altura_janela = 360
+        largura_janela = 400
+        altura_janela = 400
         largura_tela = self.root.winfo_screenwidth()
         altura_tela = self.root.winfo_screenheight()
         pos_x = (largura_tela // 2) - (largura_janela // 2)
@@ -20,29 +21,46 @@ class TelaCadastro:
         self.frame = Frame(self.root, bg="#f0f0f0", padx=20, pady=20)
         self.frame.pack(expand=True, fill="both")
 
-        Label(self.frame, text="Cadastro de Usuário", font=("Arial", 18, "bold"), bg="#f0f0f0").pack(pady=(0,10))
+        Label(
+            self.frame,
+            text="Cadastro de Usuário",
+            font=("Arial", 18, "bold"),
+            bg="#f0f0f0",
+        ).pack(pady=(0, 10))
 
-        Label(self.frame, text="Nome de usuário", bg="#f0f0f0").pack(anchor="w")
+        Label(self.frame, text="Nome de usuário", font="bold", bg="#f0f0f0").pack(
+            anchor="w"
+        )
         self.entry_username = Entry(self.frame, width=35)
-        self.entry_username.pack(pady=(0,8))
+        self.entry_username.pack(pady=(0, 8))
 
-        Label(self.frame, text="E-mail (opcional)", bg="#f0f0f0").pack(anchor="w")
+        Label(self.frame, text="E-mail (opcional)", font="bold", bg="#f0f0f0").pack(
+            anchor="w"
+        )
         self.entry_email = Entry(self.frame, width=35)
-        self.entry_email.pack(pady=(0,8))
+        self.entry_email.pack(pady=(0, 8))
 
-        Label(self.frame, text="Senha", bg="#f0f0f0").pack(anchor="w")
+        Label(self.frame, text="Senha", font="bold", bg="#f0f0f0").pack(anchor="w")
         self.entry_password = Entry(self.frame, show="*", width=35)
-        self.entry_password.pack(pady=(0,8))
+        self.entry_password.pack(pady=(0, 8))
 
-        Label(self.frame, text="Confirmar senha", bg="#f0f0f0").pack(anchor="w")
+        Label(self.frame, text="Confirmar senha", font="bold", bg="#f0f0f0").pack(
+            anchor="w"
+        )
         self.entry_password_conf = Entry(self.frame, show="*", width=35)
-        self.entry_password_conf.pack(pady=(0,12))
+        self.entry_password_conf.pack(pady=(0, 12))
 
         btn_cadastrar = Button(
-            self.frame, text="Cadastrar", width=20, bg="#4CAF50", fg="white", cursor="hand2",
-            command=self.__cadastrar
+            self.frame,
+            text="Cadastrar",
+            font=("Arial", 14, "bold"),
+            width=20,
+            bg="#4CAF50",
+            fg="white",
+            cursor="hand2",
+            command=self.__cadastrar,
         )
-        btn_cadastrar.pack(pady=(8,0))
+        btn_cadastrar.pack(pady=(8, 0))
 
     def __validar_email(self, email: str) -> bool:
         if not email:
@@ -75,7 +93,9 @@ class TelaCadastro:
 
         try:
             user = criar_usuario(username, email if email else None, password)
-            messagebox.showinfo("Sucesso", f"Usuário '{user['username']}' cadastrado com sucesso.")
+            messagebox.showinfo(
+                "Sucesso", f"Usuário '{user['username']}' cadastrado com sucesso."
+            )
             self.root.destroy()
         except Exception as e:
             messagebox.showerror("Erro", f"Falha ao criar usuário:\n{e}")

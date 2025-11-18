@@ -3,12 +3,13 @@ from tkinter import Tk, Frame, Label, Entry, Button, messagebox
 from src.usuario import validar_login
 from src.tela_cadastro import TelaCadastro
 
+
 class TelaLogin:
     def __init__(self, root: Tk):
         self.root = root
         self.root.title("Login - Automação Unifebe")
 
-        largura_janela = 400
+        largura_janela = 450
         altura_janela = 320
         largura_tela = self.root.winfo_screenwidth()
         altura_tela = self.root.winfo_screenheight()
@@ -24,28 +25,25 @@ class TelaLogin:
     def criar_widgets(self, sucesso_login):
         self.sucesso_login = sucesso_login
 
-        label_titulo = Label(
+        Label(
             self.login_frame,
             text="Acessar o Sistema",
             font=("Arial", 20, "bold"),
             bg="#f0f0f0",
             fg="#333333",
-        )
-        label_titulo.pack(pady=(0, 20))
+        ).pack(pady=(0, 20))
 
-        label_usuario = Label(
-            self.login_frame, text="Usuário", font=("Arial", 12), bg="#f0f0f0"
+        Label(self.login_frame, text="Usuário", font=("Arial", 12), bg="#f0f0f0").pack(
+            anchor="w"
         )
-        label_usuario.pack(anchor="w")
-        self.entry_usuario = Entry(self.login_frame, font=("Arial", 12), width=30)
+        self.entry_usuario = Entry(self.login_frame, font=("Arial", 12), width=35)
         self.entry_usuario.pack(pady=(5, 10))
 
-        label_senha = Label(
-            self.login_frame, text="Senha", font=("Arial", 12), bg="#f0f0f0"
+        Label(self.login_frame, text="Senha", font=("Arial", 12), bg="#f0f0f0").pack(
+            anchor="w"
         )
-        label_senha.pack(anchor="w")
         self.entry_senha = Entry(
-            self.login_frame, show="*", font=("Arial", 12), width=30
+            self.login_frame, show="*", font=("Arial", 12), width=35
         )
         self.entry_senha.pack(pady=(5, 20))
 
@@ -62,16 +60,16 @@ class TelaLogin:
             width=12,
             command=self.__verificar_login,
         )
-        btn_entrar.grid(row=0, column=0, padx=(0,8))
+        btn_entrar.grid(row=0, column=0, padx=(0, 8))
 
         btn_cadastrar = Button(
             btn_frame,
             text="Cadastrar",
-            font=("Arial", 12),
+            font=("Arial", 14, "bold"),
             bg="#2196F3",
             fg="white",
             cursor="hand2",
-            width=10,
+            width=12,
             command=self.__abrir_tela_cadastro,
         )
         btn_cadastrar.grid(row=0, column=1)

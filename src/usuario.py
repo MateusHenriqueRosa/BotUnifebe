@@ -7,7 +7,10 @@ try:
 except Exception:
     bcrypt = None
     HAS_BCRYPT = False
-    logging.warning("bcrypt não encontrado. Instale 'bcrypt' para hashing seguro de senhas.")
+    logging.warning(
+        "bcrypt não encontrado. Instale 'bcrypt' para hashing seguro de senhas."
+    )
+
 
 def hash_senha(password: str) -> str:
     if HAS_BCRYPT:
@@ -17,6 +20,7 @@ def hash_senha(password: str) -> str:
     else:
         return password
 
+
 def conferir_senha(password: str, stored_hash: str) -> bool:
     if HAS_BCRYPT:
         try:
@@ -25,6 +29,7 @@ def conferir_senha(password: str, stored_hash: str) -> bool:
             return False
     else:
         return password == stored_hash
+
 
 def criar_usuario(username: str, email: str, password: str) -> dict:
     conn = None
@@ -44,7 +49,7 @@ def criar_usuario(username: str, email: str, password: str) -> dict:
         conn.commit()
         cur.close()
         return usuario
-    
+
     except Exception as e:
         if conn:
             conn.rollback()
@@ -53,6 +58,7 @@ def criar_usuario(username: str, email: str, password: str) -> dict:
     finally:
         if conn:
             conn.close()
+
 
 def buscar_usuario_por_username(username: str) -> dict:
     conn = None
@@ -69,6 +75,7 @@ def buscar_usuario_por_username(username: str) -> dict:
     finally:
         if conn:
             conn.close()
+
 
 def validar_login(username: str, password: str) -> bool:
     usuario = buscar_usuario_por_username(username)
